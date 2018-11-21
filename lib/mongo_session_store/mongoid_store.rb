@@ -21,6 +21,19 @@ module ActionDispatch
           @data ||= unpack(_data)
         end
 
+        def data_with_legacy(packed)
+          Rails.logger.info 'data_with_legacy'
+          data_without_legacy( packed )
+          Rails.logger.info @data.blank?
+          Rails.logger.info self['data'].blank?
+          if @data.blank? && !self['data'].blank?
+            @data = Marshal.load(self['data'].unpack("m*").first) 
+          end
+          Rails.logger.info @data
+          @data
+        end
+        alias_method_chain :data, :legacy
+
         def reload
           @data = nil
           super
