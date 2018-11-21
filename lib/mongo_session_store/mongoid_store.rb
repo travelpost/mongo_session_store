@@ -21,9 +21,9 @@ module ActionDispatch
           @data ||= unpack(_data)
         end
 
-        def data_with_legacy(packed)
+        def data_with_legacy
           Rails.logger.info 'data_with_legacy'
-          data_without_legacy( packed )
+          data_without_legacy
           Rails.logger.info @data.blank?
           Rails.logger.info self['data'].blank?
           if @data.blank? && !self['data'].blank?
