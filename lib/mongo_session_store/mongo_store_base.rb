@@ -22,10 +22,12 @@ module ActionDispatch
       end
 
       def find_session(req, sid)
+        Rails.logger.info "Find session: #{sid}"
         get_session(req.env, sid)
       end
 
       def get_session(env, sid)
+        Rails.logger.info "Get session: #{sid}"
         id, record = find_or_initialize_session(sid)
         env[SESSION_RECORD_KEY] = record
         [id, record.data]
@@ -36,6 +38,7 @@ module ActionDispatch
       end
 
       def set_session(env, sid, session_data, _options = {})
+        Rails.logger.info "Set session: #{sid}"
         id, record = get_session_record(env, sid)
         record.data = session_data
         yield if block_given?
@@ -46,6 +49,7 @@ module ActionDispatch
       end
 
       def find_or_initialize_session(id)
+        Rails.logger.info "Find or init session: #{id}"
         existing_session = (id && session_class.where(:_id => id).first)
         session = existing_session if existing_session
         session ||= session_class.new(:_id => generate_sid)
@@ -70,6 +74,7 @@ module ActionDispatch
       end
 
       def destroy(env, sid)
+        Rails.logger.info "Destroy session: #{sid}"
         return unless sid
 
         _, record = get_session_record(env, sid)

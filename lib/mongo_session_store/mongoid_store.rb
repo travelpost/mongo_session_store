@@ -24,9 +24,10 @@ module ActionDispatch
         def data_with_legacy
           Rails.logger.info 'data_with_legacy'
           data_without_legacy
-          Rails.logger.info @data.blank?
-          Rails.logger.info self['data'].blank?
+          Rails.logger.info "Rails 4 session data blank" if @data.blank?
+          Rails.logger.info "Rails 3.2 session data blank" if self['data'].blank?
           if @data.blank? && !self['data'].blank?
+            Rails.logger.info "Reading Rails 3.2 session data"
             @data = Marshal.load(self['data'].unpack("m*").first) 
           end
           Rails.logger.info @data
