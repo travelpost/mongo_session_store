@@ -45,7 +45,7 @@ module ActionDispatch
         # Rack spec dictates that set_session should return true or false
         # depending on whether or not the session was saved or not.
         # However, ActionPack seems to want a session id instead.
-        Rails.logger.info "Set session record: #{record}"
+        Rails.logger.info "Set session record: #{record.attributes}"
         result = record.save
         Rails.logger.info "Set session result: #{result}"
         result ? id : false
