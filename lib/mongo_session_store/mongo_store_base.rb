@@ -45,7 +45,10 @@ module ActionDispatch
         # Rack spec dictates that set_session should return true or false
         # depending on whether or not the session was saved or not.
         # However, ActionPack seems to want a session id instead.
-        record.save ? id : false
+        Rails.logger.info "Set session record: #{record}"
+        result = record.save
+        Rails.logger.info "Set session result: #{result}"
+        result ? id : false
       end
 
       def find_or_initialize_session(id)
