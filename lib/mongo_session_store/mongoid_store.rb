@@ -21,19 +21,21 @@ module ActionDispatch
           @data ||= unpack(_data)
         end
 
+        # Begin monkeypatch
+        # After 18mo no more Rails3.2 sessions should be around (trimmed) and we can remove this monkeypatch
         def data_with_legacy
-          Rails.logger.info 'data_with_legacy'
           data_without_legacy
-          Rails.logger.info "Rails 4 session data blank" if @data.blank?
-          Rails.logger.info "Rails 3.2 session data blank" if self['data'].blank?
           if @data.blank? && !self['data'].blank?
-            Rails.logger.info "Reading Rails 3.2 session data"
+            Rails.logger.info "Reading Rails 3.2 session"
             @data = Marshal.load(self['data'].unpack("m*").first) 
+            Rails.logger.info "Rails 3.2 session data: #{@data}"
+          elsif !@data.blank?
+            Rails.logger.info "Rails 4 session data: #{@data}"
           end
-          Rails.logger.info @data
           @data
         end
         alias_method_chain :data, :legacy
+        # End monkeypatch
 
         def reload
           @data = nil
